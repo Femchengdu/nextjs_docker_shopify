@@ -1,12 +1,29 @@
-import { useState, useContext } from 'react'
+import { useState, useEffect } from 'react'
 import { formatter } from '../utils/helper'
 import ProductOptions from './ProductOptions'
-import { CartContext } from '../context/shopContext'
 import ManifoldCampaignWidget from './ManifoldCampaignWidget'
+import useSWR from 'swr'
+import axios from 'axios'
 
+
+const fetcher = async (url, id) => {
+    const res = await axios.get(url, {
+        params: {
+            id: id
+        }
+    })
+    return res.data
+}
 
 export default function ProductForm({ product }) {
-    const { addToCart } = useContext(CartContext)
+
+    const { data: productInnventory } = useSWR(
+        ['/api/isgatedmerch', product.handle],
+        (url, id) => fetcher(url, id),
+        { errorRetryCount: 3 }
+    )
+
+
     const allVariantOptions = product.variants.edges?.map(variant => {
 
         const allOptions = {}
@@ -35,6 +52,7 @@ export default function ProductForm({ product }) {
 
     const [selectedVariant, setSelectedVariant] = useState(allVariantOptions[0])
     const [selectedOptions, setSelectedOptions] = useState(defaultValues)
+    const [merchantGateProduct, setMerchantGateProduct] = useState(false)
 
     function setOptions(name, value) {
         setSelectedOptions(prevState => {
@@ -52,6 +70,22 @@ export default function ProductForm({ product }) {
             }
         })
     }
+
+    useEffect(() => {
+        if (productInnventory?.productType === 'Manifold') {
+            // compare vriants to see if the variant macthes the selection
+            const checkAvailable = productInnventory.variants.edges.filter(item => item.node.id === selectedVariant.id)
+            // there are somd scenatios I hab not yet handled. Namely 
+            // Not manifold, not available for sale
+            // Manifol and available for sale
+            if (checkAvailable.length && checkAvailable[0].node.availableForSale === true) {
+                setMerchantGateProduct(true)
+            } else {
+                setMerchantGateProduct(false)
+            }
+
+        }
+    }, [productInnventory, selectedVariant])
     return (
         <div className='rounded-2xl p-4 shadow-lg flex flex-col w-full md:w-1/3'>
             <h2 className="text-2xl font-bold">
@@ -71,12 +105,13 @@ export default function ProductForm({ product }) {
                 )
             }
 
-            {product.productType === "Manifold" ? <ManifoldCampaignWidget /> : <button
+            {merchantGateProduct ? <ManifoldCampaignWidget /> : <button
                 onClick={() => {
-                    console.log('selected variant ', selectedVariant)
-                    addToCart(selectedVariant)
+                    // Add to cart should not be triggered here
+                    // console.log('selected variant ', selectedVariant)
+                    // addToCart(selectedVariant)
                 }}
-                className="bg-black rounded-lg text-white px-2 py-3 hover:bg-gray-800">Add To Cart</button>}
+                className="rounded-lg text-white px-2 py-3 bg-gray-800 cursor-not-allowed">Sold out!</button>}
         </div>
     )
 }

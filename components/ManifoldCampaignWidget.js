@@ -8,7 +8,7 @@ export default function ManifoldCampaignWidget() {
     const [tokens, setTokens] = useState([])
     useEffect(() => {
         window.addEventListener("ethereum-address-changed", function () {
-            console.log('if you need to do something when they log in, now is the time')
+            //console.log('if you need to do something when they log in, now is the time')
         });
 
         window.addEventListener('m-authenticated', async (event) => {

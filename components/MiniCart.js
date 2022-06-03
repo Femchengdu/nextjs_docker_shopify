@@ -9,20 +9,12 @@ import ManifoldCheckoutWidget from './ManifoldCheckoutWidjet'
 
 export default function MiniCart({ cart }) {
     const cancelButtonRef = useRef()
-    const { cartOpen, setCartOpen, checkoutUrl, removeCartItem, isManifoldInCart, isManifoldProduct } = useContext(CartContext)
+    const { cartOpen, setCartOpen, checkoutUrl, removeCartItem, isManifoldProduct } = useContext(CartContext)
 
     let cartTotal = 0
     cart.map(item => {
         cartTotal += item?.variantPrice * item?.variantQuantity
     })
-
-    useEffect(() => {
-
-        if (isManifoldInCart()) {
-            updateManifoldProductStatus(true)
-        }
-    }, [cart])
-    console.log("Check the cart for manifold::::", isManifoldProduct)
 
     return (
         <Transition.Root show={cartOpen} as={Fragment}>

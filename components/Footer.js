@@ -26,7 +26,6 @@ export default function Footer() {
                     &copy; 2022 Shopify Next.js NFT merch gate
                 </p>
             </div>
-            Footer
         </footer>
     )
 }
