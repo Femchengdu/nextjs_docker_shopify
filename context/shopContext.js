@@ -10,6 +10,7 @@ export default function shopProvider({ children }) {
     const [cartOpen, setCartOpen] = useState(false)
     const [checkoutId, setCheckoutId] = useState('')
     const [checkoutUrl, setCheckoutUrl] = useState('')
+    const [isManifoldProduct, setIsManifoldProduct] = useState(false)
 
     useEffect(() => {
 
@@ -56,6 +57,14 @@ export default function shopProvider({ children }) {
         }
     }
 
+    function updateManifoldProductStatus(inCart) {
+        setIsManifoldProduct(inCart)
+    }
+
+    function isManifoldInCart() {
+        return cart.some((elem) => elem.productType === "Manifold")
+    }
+
     async function removeCartItem(itemToRemove) {
         const updatedCart = cart.filter(item => item.id !== itemToRemove)
         setCart(updatedCart)
@@ -73,7 +82,10 @@ export default function shopProvider({ children }) {
             setCartOpen,
             addToCart,
             checkoutUrl,
-            removeCartItem
+            removeCartItem,
+            updateManifoldProductStatus,
+            isManifoldProduct,
+            isManifoldInCart
         }}>
             {children}
         </CartContext.Provider>

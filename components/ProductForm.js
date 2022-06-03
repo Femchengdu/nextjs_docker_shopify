@@ -2,6 +2,7 @@ import { useState, useContext } from 'react'
 import { formatter } from '../utils/helper'
 import ProductOptions from './ProductOptions'
 import { CartContext } from '../context/shopContext'
+import ManifoldCampaignWidget from './ManifoldCampaignWidget'
 
 
 export default function ProductForm({ product }) {
@@ -22,7 +23,8 @@ export default function ProductForm({ product }) {
             options: allOptions,
             variantTitle: variant.node.title,
             variantPrice: variant.node.priceV2.amount,
-            variantQuantity: 1
+            variantQuantity: 1,
+            productType: product.productType
         }
     })
 
@@ -68,12 +70,13 @@ export default function ProductForm({ product }) {
                     />
                 )
             }
-            <button
+
+            {product.productType === "Manifold" ? <ManifoldCampaignWidget /> : <button
                 onClick={() => {
                     console.log('selected variant ', selectedVariant)
                     addToCart(selectedVariant)
                 }}
-                className="bg-black rounded-lg text-white px-2 py-3 hover:bg-gray-800">Add To Cart</button>
+                className="bg-black rounded-lg text-white px-2 py-3 hover:bg-gray-800">Add To Cart</button>}
         </div>
     )
 }
