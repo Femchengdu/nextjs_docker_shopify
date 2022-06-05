@@ -216,6 +216,13 @@ export default function ManifoldCampaignWidget() {
             </div>
 
             <div data-widget="m-add-to-cart"></div>
+            <div
+                data-widget="m-campaign"
+                data-campaign-id="951531387"
+                data-client-id="0c6b5064e59c73f66d61740265faef1185e093a4941a9c62591e3a07a0740726"
+                data-app-name="NFTGatedMerch"
+                data-network="1">
+            </div>
             {tokens.length > 0 && <UserNFTTokens tokens={tokens} />}
         </>
     );
