@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { formatter } from '../utils/helper'
 import ProductOptions from './ProductOptions'
-import ManifoldCampaignWidget from './ManifoldCampaignWidget'
+import MoralisCampaignWidget from './MoralisCampaignWidget'
 import useSWR from 'swr'
 import axios from 'axios'
 
@@ -105,7 +105,7 @@ export default function ProductForm({ product }) {
                 )
             }
 
-            {merchantGateProduct ? <ManifoldCampaignWidget /> : <button
+            {merchantGateProduct ? <MoralisCampaignWidget /> : <button
                 onClick={() => {
                     // Add to cart should not be triggered here
                     // console.log('selected variant ', selectedVariant)
